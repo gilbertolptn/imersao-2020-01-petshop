@@ -8,6 +8,9 @@ import org.modelmapper.ModelMapper;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
 
+import javax.validation.Valid;
+import javax.validation.constraints.Min;
+import javax.validation.constraints.NotNull;
 import java.net.URI;
 import java.util.List;
 import java.util.Optional;
@@ -26,7 +29,10 @@ public class AnimalEndpoint {
     }
 
     @GetMapping("/{id}")
-    public ResponseEntity<AnimalOutDto> buscarPorId(@PathVariable Long id){
+    public ResponseEntity<AnimalOutDto> buscarPorId(
+            @PathVariable
+//TODO            @Valid @Min(value = 1, message = "Id deve ser maior que zero")
+            Long id){
 
 //        if(animalOpt.isPresent()){
 //            Animal animal = animalOpt.get();
@@ -56,7 +62,8 @@ public class AnimalEndpoint {
 
         return ResponseEntity.ok(animalService
                 .buscarTodos().stream()
-                .map(AnimalOutDto::new)
+//                .map(AnimalOutDto::new)
+                .map(a -> modelMapper.map(a, AnimalOutDto.class))
                 .collect(Collectors.toList()));
     }
 
@@ -94,8 +101,8 @@ public class AnimalEndpoint {
 
 
     @PostMapping
-    public ResponseEntity criar(@RequestBody AnimalInDto animalDto){
-        
+    public ResponseEntity criar(@RequestBody @Valid AnimalInDto animalDto){
+
         Animal animal = modelMapper.map(animalDto, Animal.class);
 
         Animal animalSalvo = this.animalService.salvar(animal);

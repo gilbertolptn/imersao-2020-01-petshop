@@ -1,9 +1,11 @@
 package br.com.tt.petshop.model;
 
 import com.fasterxml.jackson.annotation.JsonFormat;
+import org.hibernate.validator.constraints.br.CPF;
 import org.springframework.format.annotation.DateTimeFormat;
 
 import javax.persistence.*;
+import javax.validation.constraints.Pattern;
 import java.time.LocalDate;
 import java.util.List;
 
@@ -20,6 +22,7 @@ public class Cliente {
     private String nome;
 
     @Column(name = "cpf")
+    @CPF(message = "Informe um CPF válido!")
     private String cpf;
 
 // Ex: 2020-01-01   @DateTimeFormat(iso = DateTimeFormat.ISO.DATE)

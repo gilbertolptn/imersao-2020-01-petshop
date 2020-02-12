@@ -4,6 +4,7 @@ import br.com.tt.petshop.model.Animal;
 import br.com.tt.petshop.repository.AnimalRepository;
 import org.springframework.stereotype.Service;
 
+import javax.validation.Valid;
 import java.util.List;
 import java.util.Optional;
 
