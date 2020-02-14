@@ -1,5 +1,7 @@
 package br.com.tt.petshop.service;
 
+import br.com.tt.petshop.client.ApiCreditoClient;
+import br.com.tt.petshop.client.dto.SituacaoCreditoDto;
 import br.com.tt.petshop.exception.NomeInvalidoException;
 import br.com.tt.petshop.model.Cliente;
 import br.com.tt.petshop.repository.ClienteRepository;
@@ -17,14 +19,25 @@ public class ClienteService {
     private static final int QUANTIDADE_MINIMA_PARTES = 2;
 
     private ClienteRepository clienteRepository;
+    private ApiCreditoClient apiCreditoClient;
 
-    public ClienteService(ClienteRepository clienteRepository) {
+    public ClienteService(ClienteRepository clienteRepository, ApiCreditoClient apiCreditoClient) {
         this.clienteRepository = clienteRepository;
+        this.apiCreditoClient = apiCreditoClient;
     }
 
     public Cliente criar(Cliente cliente) throws NomeInvalidoException {
         validarNomeCliente(cliente);
+        validarSituacaoCredito(cliente.getCpf());
         return this.clienteRepository.save(cliente);
+    }
+
+    private void validarSituacaoCredito(String cpf) {
+        SituacaoCreditoDto dto = apiCreditoClient.verificaSituacao(cpf);
+        if(dto.isNegativado()){
+            throw new IllegalArgumentException(
+                    "Cliente não pode ser cadastrado pois possui pendências!");
+        }
     }
 
     private void validarNomeCliente(Cliente cliente) throws NomeInvalidoException {

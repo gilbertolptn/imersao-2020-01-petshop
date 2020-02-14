@@ -2,6 +2,8 @@ package br.com.tt.petshop.api;
 
 import br.com.tt.petshop.model.Produto;
 import br.com.tt.petshop.service.ProdutoService;
+import io.swagger.annotations.ApiOperation;
+import io.swagger.annotations.ApiParam;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
 
@@ -29,8 +31,11 @@ public class ProdutoEndpoint {
     }
 
     @GetMapping
+    @ApiOperation(value = "Operação para listar produtos")
     public ResponseEntity<List<Produto>> listar(
-            @RequestParam(required = false) BigDecimal valorMaiorQue
+            @RequestParam(required = false)
+            @ApiParam(value = "Valor considerado no filtro de Produto")
+            BigDecimal valorMaiorQue
     ){
         return ResponseEntity.ok(produtoService.listar(valorMaiorQue));
     }
